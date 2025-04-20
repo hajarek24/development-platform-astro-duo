@@ -21,7 +21,7 @@ const Apod: React.FC = () => {
     const fetchApod = async () => {
       try {
         console.log('Attempting to fetch APOD from:', import.meta.env.VITE_API_BASE_URL + '/api/apod');
-        
+        // hello
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/apod`);
         
         console.log('Response status:', response.status);
