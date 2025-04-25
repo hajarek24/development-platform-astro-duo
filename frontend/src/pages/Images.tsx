@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react' 
 import {
   Box,
   Container,
@@ -47,10 +47,11 @@ const Images = () => {
     setLoading(true)
     setError(null)
     try {
+      // Updated to use the correct backend URL and endpoint
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/images/search?q=${query}`
+        `http://localhost:3000/api/images/search?query=${query}`
       )
-      setImages(response.data)
+      setImages(response.data.collection?.items || [])
     } catch (error) {
       console.error('Error fetching images:', error)
       setError('Failed to fetch images. Please try again.')
@@ -116,44 +117,52 @@ const Images = () => {
 
         {/* Image Grid */}
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
-          {images.map((image, index) => (
-            <Card key={index} bg={cardBg}>
-              <CardBody>
-                <VStack align="stretch" spacing={4}>
-                  <Image
-                    src={image.links[0].href}
-                    alt={image.data[0].title}
-                    borderRadius="lg"
-                    objectFit="cover"
-                    h="200px"
-                    w="100%"
-                  />
-                  <VStack align="start" spacing={2}>
-                    <Heading size="sm">{image.data[0].title}</Heading>
-                    <Text fontSize="sm" color="gray.400">
-                      {image.data[0].date_created}
-                    </Text>
-                    <Text noOfLines={3}>{image.data[0].description}</Text>
-                    <Button
-                      leftIcon={<FaDownload />}
-                      colorScheme="blue"
-                      size="sm"
-                      as="a"
-                      href={image.links[0].href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Download
-                    </Button>
+          {images.length > 0 ? (
+            images.map((image, index) => (
+              <Card key={index} bg={cardBg}>
+                <CardBody>
+                  <VStack align="stretch" spacing={4}>
+                    <Image
+                      src={image.links[0]?.href || 'https://via.placeholder.com/300'}
+                      alt={image.data[0]?.title || 'NASA Image'}
+                      borderRadius="lg"
+                      objectFit="cover"
+                      h="200px"
+                      w="100%"
+                    />
+                    <VStack align="start" spacing={2}>
+                      <Heading size="sm">{image.data[0]?.title || 'Untitled'}</Heading>
+                      <Text fontSize="sm" color="gray.400">
+                        {image.data[0]?.date_created 
+                          ? new Date(image.data[0].date_created).toLocaleDateString() 
+                          : 'No date available'}
+                      </Text>
+                      <Text noOfLines={3}>{image.data[0]?.description || 'No description available'}</Text>
+                      <Button
+                        leftIcon={<FaDownload />}
+                        colorScheme="blue"
+                        size="sm"
+                        as="a"
+                        href={image.links[0]?.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Download
+                      </Button>
+                    </VStack>
                   </VStack>
-                </VStack>
-              </CardBody>
-            </Card>
-          ))}
+                </CardBody>
+              </Card>
+            ))
+          ) : (
+            <Box textAlign="center" width="100%" gridColumn="1 / -1">
+              <Text>No images found. Try a different search term.</Text>
+            </Box>
+          )}
         </SimpleGrid>
       </VStack>
     </Container>
   )
 }
 
-export default Images 
+export default Images

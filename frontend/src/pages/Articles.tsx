@@ -17,10 +17,35 @@ import {
   Grid,
   Image,
   Spinner,
-  Center
+  Center,
+  Alert,
+  AlertIcon
 } from '@chakra-ui/react'
 import { FaSearch } from 'react-icons/fa'
+import axios from 'axios'
 
+// Updated interface to match the expected response from /api/images/articles
+interface ArticleItem {
+  data: {
+    title: string;
+    description: string;
+    date_created: string;
+    center: string;
+    nasa_id: string;
+  }[];
+  links: {
+    href: string;
+    rel: string;
+  }[];
+}
+
+interface ImageLibraryResponse {
+  collection: {
+    items: ArticleItem[];
+  };
+}
+
+// Transformed article to match your UI
 interface Article {
   id: string;
   title: string;
@@ -41,15 +66,28 @@ const Articles: React.FC = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/articles')
-        if (!response.ok) {
+        // Updated to use the correct endpoint from your ImageLibraryController
+        const response = await axios.get('http://localhost:3000/api/images/articles')
+        
+        if (response.status !== 200) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
-        const data = await response.json()
-        setArticles(data)
+        
+        // Transform the NASA API response to match our Article interface
+        const data: ImageLibraryResponse = response.data;
+        const transformedArticles: Article[] = data.collection.items.map(item => ({
+          id: item.data[0]?.nasa_id || Math.random().toString(),
+          title: item.data[0]?.title || 'Untitled Article',
+          content: item.data[0]?.description || 'No content available',
+          author: item.data[0]?.center || 'NASA',
+          date: item.data[0]?.date_created || new Date().toISOString(),
+          imageUrl: item.links[0]?.href || 'https://via.placeholder.com/300'
+        }));
+        
+        setArticles(transformedArticles)
       } catch (err) {
+        console.error('Error fetching articles:', err)
         setError('Failed to fetch articles')
-        console.error(err)
       } finally {
         setLoading(false)
       }
@@ -65,8 +103,8 @@ const Articles: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // Implement search functionality here
-    console.log('Searching for:', searchQuery)
+    // Local filtering is already implemented with filteredArticles
+    console.log('Filtering articles for:', searchQuery)
   }
 
   if (loading) {
@@ -80,7 +118,10 @@ const Articles: React.FC = () => {
   if (error) {
     return (
       <Center h="100vh">
-        <Text color="red.500">{error}</Text>
+        <Alert status="error" variant="solid">
+          <AlertIcon />
+          {error}
+        </Alert>
       </Center>
     )
   }
@@ -108,44 +149,49 @@ const Articles: React.FC = () => {
                 colorScheme="blue"
                 variant="ghost"
                 type="submit"
-                isLoading={loading}
               />
             </InputRightElement>
           </InputGroup>
         </Box>
 
         {/* Articles Grid */}
-        <Grid
-          templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-          gap={6}
-          width="100%"
-        >
-          {filteredArticles.map((article) => (
-            <Card key={article.id} bg={cardBg} color="black">
-              <CardBody>
-                <Image
-                  src={article.imageUrl}
-                  alt={article.title}
-                  borderRadius="lg"
-                  mb={4}
-                  height="200px"
-                  objectFit="cover"
-                  width="100%"
-                />
-                <VStack align="start" spacing={2}>
-                  <Heading size="md">{article.title}</Heading>
-                  <Text fontSize="sm" color="gray.500">
-                    By {article.author} • {new Date(article.date).toLocaleDateString()}
-                  </Text>
-                  <Text noOfLines={3}>{article.content}</Text>
-                </VStack>
-              </CardBody>
-            </Card>
-          ))}
-        </Grid>
+        {filteredArticles.length > 0 ? (
+          <Grid
+            templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+            gap={6}
+            width="100%"
+          >
+            {filteredArticles.map((article) => (
+              <Card key={article.id} bg={cardBg} color="white">
+                <CardBody>
+                  <Image
+                    src={article.imageUrl}
+                    alt={article.title}
+                    borderRadius="lg"
+                    mb={4}
+                    height="200px"
+                    objectFit="cover"
+                    width="100%"
+                  />
+                  <VStack align="start" spacing={2}>
+                    <Heading size="md">{article.title}</Heading>
+                    <Text fontSize="sm" color="gray.400">
+                      By {article.author} • {new Date(article.date).toLocaleDateString()}
+                    </Text>
+                    <Text noOfLines={3}>{article.content}</Text>
+                  </VStack>
+                </CardBody>
+              </Card>
+            ))}
+          </Grid>
+        ) : (
+          <Center py={10}>
+            <Text>No articles found matching your search.</Text>
+          </Center>
+        )}
       </VStack>
     </Container>
   )
 }
 
-export default Articles 
+export default Articles

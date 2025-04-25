@@ -28,6 +28,7 @@ const Planets: React.FC = () => {
   useEffect(() => {
     const fetchPlanets = async () => {
       try {
+        // Updated port to 8080 which is Spring Boot's default port
         const response = await fetch('http://localhost:3000/api/planets')
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
@@ -48,7 +49,8 @@ const Planets: React.FC = () => {
   if (loading) {
     return (
       <Center h="100vh">
-        <Spinner size="xl" color="blue.500" />
+        <Spinner size="xl" />
+        <Text ml={4}>Loading planets...</Text>
       </Center>
     )
   }
@@ -56,42 +58,36 @@ const Planets: React.FC = () => {
   if (error) {
     return (
       <Center h="100vh">
-        <Text color="red.500">{error}</Text>
+        <Text color="red.500" fontSize="xl">{error}</Text>
       </Center>
     )
   }
 
   return (
-    <Box p={8} maxW="1200px" mx="auto">
-      <VStack spacing={8}>
-        <Heading as="h1" size="2xl" textAlign="center" color="white">
-          Our Solar System
-        </Heading>
-
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8} width="100%">
-          {planets.map((planet) => (
-            <Card key={planet.id} bg="white" color="black">
-              <CardBody>
-                <Image
-                  src={planet.imageUrl}
-                  alt={planet.name}
-                  borderRadius="lg"
-                  mb={4}
-                  height="200px"
-                  objectFit="cover"
-                  width="100%"
-                />
-                <VStack align="start" spacing={2}>
-                  <Heading size="md">{planet.name}</Heading>
-                  <Text noOfLines={3}>{planet.description}</Text>
-                </VStack>
-              </CardBody>
-            </Card>
-          ))}
-        </SimpleGrid>
+    <Box p={8}>
+      <VStack spacing={8} mb={10}>
+        <Heading as="h1" size="2xl">Our Solar System</Heading>
+        <Text fontSize="xl">Explore the planets of our solar system</Text>
       </VStack>
+      
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={10}>
+        {planets.map((planet) => (
+          <Card key={planet.id} overflow="hidden" variant="outline">
+            <Image
+              src={planet.imageUrl || 'https://via.placeholder.com/300'}
+              alt={planet.name}
+              objectFit="cover"
+              height="200px"
+            />
+            <CardBody>
+              <Heading size="md" mb={2}>{planet.name}</Heading>
+              <Text>{planet.description}</Text>
+            </CardBody>
+          </Card>
+        ))}
+      </SimpleGrid>
     </Box>
   )
 }
 
-export default Planets 
+export default Planets

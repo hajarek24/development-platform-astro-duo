@@ -5,6 +5,7 @@ import StarryBackground from './components/StarryBackground'
 import Home from './pages/Home'
 import Articles from './pages/Articles'
 import Planets from './pages/Planets'
+import PlanetDetail from './pages/PlanetDetail' // ← Add this line
 import Images from './pages/Images'
 import Explore from './pages/Explore'
 import About from './pages/About'
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/articles" element={<Articles />} />
                 <Route path="/planets" element={<Planets />} />
+                <Route path="/planets/:id" element={<PlanetDetail />} /> {/* ← This is the new route */}
                 <Route path="/images" element={<Images />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/about" element={<About />} />
@@ -40,4 +42,4 @@ function App() {
   )
 }
 
-export default App 
+export default App
