@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/planets")
-@CrossOrigin(origins = "http://localhost:3000") // Adjust to your frontend URL
+@CrossOrigin(origins = "http://localhost:3001") // Adjust to your frontend URL
 public class PlanetController {
 
     private final PlanetService planetService;

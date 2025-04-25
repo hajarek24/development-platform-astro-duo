@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/images")
-@CrossOrigin(origins = "http://localhost:3000") // Adjust this to your frontend URL
+@CrossOrigin(origins = "http://localhost:3001") // Adjust this to your frontend URL
 public class ImageLibraryController {
 
     private final ImageLibraryService imageLibraryService;
