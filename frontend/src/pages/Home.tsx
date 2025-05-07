@@ -21,6 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { FaSearch } from 'react-icons/fa'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 interface APODData {
   date: string
@@ -32,13 +33,22 @@ interface APODData {
   url: string
 }
 
+interface Article {
+  id: string
+  title: string
+  description: string
+  url: string
+}
+
 const Home = () => {
   const [apod, setApod] = useState<APODData | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [articles, setArticles] = useState<Article[]>([])
   const bgColor = useColorModeValue('gray.800', 'gray.900')
   const cardBg = useColorModeValue('gray.700', 'gray.800')
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchAPOD = async () => {
@@ -58,9 +68,41 @@ const Home = () => {
     fetchAPOD()
   }, [])
 
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/images/articles', {
+          params: { count: 3 },
+        })
+        setArticles(response.data)
+      } catch (error) {
+        console.error('Error fetching articles:', error)
+      }
+    }
+
+    fetchArticles()
+  }, [])
+
   return (
     <Container maxW="1200px" py={8}>
       <VStack spacing={8} align="stretch">
+        <Box textAlign="center" py={16} position="relative" zIndex={1}>
+          <Heading as="h1" size="2xl" fontWeight="bold" color="white" mb={4}>
+            Explore the <Box as="span" color="blue.400">Wonders</Box> of Space
+          </Heading>
+          <Text fontSize="xl" color="gray.200" mb={6}>
+            Your portal to cosmic discovery featuring NASA data, planetary exploration, and the latest in astronomical research.
+          </Text>
+          <Box display="flex" justifyContent="center" gap={4}>
+            <Button colorScheme="blue" size="lg" leftIcon={<span role='img' aria-label='rocket'>🚀</span>} onClick={() => navigate('/explore')}>
+              Start Exploring
+            </Button>
+            <Button variant="outline" colorScheme="whiteAlpha" size="lg" leftIcon={<span role='img' aria-label='info'>ℹ️</span>} onClick={() => navigate('/about')}>
+              Learn More
+            </Button>
+          </Box>
+        </Box>
+
         {/* NASA Picture of the Day */}
         <Box>
           <Heading mb={4}>NASA Picture of the Day</Heading>
@@ -134,24 +176,31 @@ const Home = () => {
             Featured Articles
           </Heading>
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-            {/* Sample featured articles - will be replaced with actual data */}
-            {[1, 2, 3].map((item) => (
-              <Card key={item} bg={cardBg}>
-                <CardBody>
-                  <VStack align="start" spacing={3}>
-                    <Heading size="sm">Featured Article {item}</Heading>
-                    <Text>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                      Sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua.
-                    </Text>
-                    <Button colorScheme="blue" size="sm">
-                      Read More
-                    </Button>
-                  </VStack>
-                </CardBody>
-              </Card>
-            ))}
+            {articles.length > 0 ? (
+              articles.map((article) => (
+                <Card key={article.id} bg={cardBg}>
+                  <CardBody>
+                    <VStack align="start" spacing={3}>
+                      <Heading size="sm">{article.title}</Heading>
+                      <Text>{article.description}</Text>
+                      <Button
+                        colorScheme="blue"
+                        size="sm"
+                        as="a"
+                        href={article.url}
+                        target="_blank"
+                      >
+                        Read More
+                      </Button>
+                    </VStack>
+                  </CardBody>
+                </Card>
+              ))
+            ) : (
+              <Box textAlign="center" py={8}>
+                <Spinner size="xl" />
+              </Box>
+            )}
           </SimpleGrid>
         </Box>
       </VStack>
@@ -159,4 +208,4 @@ const Home = () => {
   )
 }
 
-export default Home 
+export default Home

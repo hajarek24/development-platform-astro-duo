@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import StarryBackground from './components/StarryBackground'
 import Home from './pages/Home'
 import Articles from './pages/Articles'
+import ArticleDetail from './pages/ArticleDetail'
 import Planets from './pages/Planets'
 import PlanetDetail from './pages/PlanetDetail' // ← Add this line
 import Images from './pages/Images'
@@ -12,6 +13,7 @@ import About from './pages/About'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Profile from './pages/Profile'
+import Footer from './components/Footer'
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/articles" element={<Articles />} />
+                <Route path="/articles/:id" element={<ArticleDetail />} />
                 <Route path="/planets" element={<Planets />} />
                 <Route path="/planets/:id" element={<PlanetDetail />} /> {/* ← This is the new route */}
                 <Route path="/images" element={<Images />} />
@@ -35,6 +38,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
               </Routes>
             </Box>
+            <Footer />
           </Box>
         </Box>
       </Router>

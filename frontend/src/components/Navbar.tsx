@@ -16,8 +16,8 @@ const Navbar = () => {
   ]
 
   return (
-    <Box bg={bgColor} px={4} py={3}>
-      <Flex maxW="1200px" mx="auto" align="center" justify="space-between">
+    <Box bg={bgColor} px={0} py={3} borderBottom="1px solid" borderColor="gray.700" w="100vw">
+      <Flex align="center" justify="space-between" px={8}>
         <Link
           as={RouterLink}
           to="/"

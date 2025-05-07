@@ -8,8 +8,6 @@ import {
   CardBody,
   Text,
   VStack,
-  Button,
-  useColorModeValue,
   Input,
   InputGroup,
   InputRightElement,
@@ -23,6 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { FaSearch } from 'react-icons/fa'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 
 // Updated interface to match the expected response from /api/images/articles
 interface ArticleItem {
@@ -60,21 +59,17 @@ const Articles: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const bgColor = useColorModeValue('gray.800', 'gray.900')
-  const cardBg = useColorModeValue('gray.700', 'gray.800')
 
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        // Updated to use the correct endpoint from your ImageLibraryController
         const response = await axios.get('http://localhost:3000/api/images/articles')
-        
+
         if (response.status !== 200) {
           throw new Error(`HTTP error! Status: ${response.status}`)
         }
-        
-        // Transform the NASA API response to match our Article interface
-        const data: ImageLibraryResponse = response.data;
+
+        const data: ImageLibraryResponse = response.data
         const transformedArticles: Article[] = data.collection.items.map(item => ({
           id: item.data[0]?.nasa_id || Math.random().toString(),
           title: item.data[0]?.title || 'Untitled Article',
@@ -82,8 +77,8 @@ const Articles: React.FC = () => {
           author: item.data[0]?.center || 'NASA',
           date: item.data[0]?.date_created || new Date().toISOString(),
           imageUrl: item.links[0]?.href || 'https://via.placeholder.com/300'
-        }));
-        
+        }))
+
         setArticles(transformedArticles)
       } catch (err) {
         console.error('Error fetching articles:', err)
@@ -103,8 +98,6 @@ const Articles: React.FC = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    // Local filtering is already implemented with filteredArticles
-    console.log('Filtering articles for:', searchQuery)
   }
 
   if (loading) {
@@ -138,7 +131,7 @@ const Articles: React.FC = () => {
               placeholder="Search articles..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              bg={bgColor}
+              bg="gray.800"
               color="white"
               _placeholder={{ color: 'gray.500' }}
             />
@@ -156,34 +149,37 @@ const Articles: React.FC = () => {
 
         {/* Articles Grid */}
         {filteredArticles.length > 0 ? (
-          <Grid
-            templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-            gap={6}
-            width="100%"
-          >
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} width="100%">
             {filteredArticles.map((article) => (
-              <Card key={article.id} bg={cardBg} color="white">
-                <CardBody>
-                  <Image
-                    src={article.imageUrl}
-                    alt={article.title}
-                    borderRadius="lg"
-                    mb={4}
-                    height="200px"
-                    objectFit="cover"
-                    width="100%"
-                  />
-                  <VStack align="start" spacing={2}>
-                    <Heading size="md">{article.title}</Heading>
-                    <Text fontSize="sm" color="gray.400">
-                      By {article.author} • {new Date(article.date).toLocaleDateString()}
-                    </Text>
-                    <Text noOfLines={3}>{article.content}</Text>
-                  </VStack>
-                </CardBody>
-              </Card>
+              <Link
+                to={`/articles/${article.id}`}
+                state={{ article }}
+                key={article.id}
+                style={{ textDecoration: 'none' }}
+              >
+                <Card bg="gray.700" color="white" _hover={{ transform: 'scale(1.02)', transition: '0.2s' }}>
+                  <CardBody>
+                    <Image
+                      src={article.imageUrl}
+                      alt={article.title}
+                      borderRadius="lg"
+                      mb={4}
+                      height="200px"
+                      objectFit="cover"
+                      width="100%"
+                    />
+                    <VStack align="start" spacing={2}>
+                      <Heading size="md">{article.title}</Heading>
+                      <Text fontSize="sm" color="gray.400">
+                        By {article.author} • {new Date(article.date).toLocaleDateString()}
+                      </Text>
+                      <Text noOfLines={3}>{article.content}</Text>
+                    </VStack>
+                  </CardBody>
+                </Card>
+              </Link>
             ))}
-          </Grid>
+          </SimpleGrid>
         ) : (
           <Center py={10}>
             <Text>No articles found matching your search.</Text>
