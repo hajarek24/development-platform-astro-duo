@@ -11,7 +11,7 @@ public class PlanetService {
     public List<PlanetResponse> getAllPlanets() {
         List<PlanetResponse> planets = new ArrayList<>();
 
-        // Mercury
+// Mercury
         PlanetResponse mercury = new PlanetResponse();
         mercury.setId("mercury");
         mercury.setName("Mercury");
@@ -20,7 +20,7 @@ public class PlanetService {
         mercury.setRadius(0.383);
         mercury.setSemiMajorAxis(0.387);
         mercury.setOrbitalPeriod(88);
-        mercury.setImageUrl("https://solarsystem.nasa.gov/system/stellar_items/image_files/2_feature_1600x900_mercury_messenger.jpg");
+        mercury.setImageUrl("https://pixabay.com/get/g5a734f92428f1ba467871ba912b1b386bc4a556b39ed66eebb22dd89e08f80cfa67e0e45eda3c8b0d390bf893a8611f821ee8db3dc7f145f27db5f26c63a17c55f2c35fb5f71f257f1bca36890f609cd_640.png");
         mercury.setHasRings(false);
         mercury.setMoonCount(0);
         mercury.setType("terrestrial");
@@ -29,7 +29,7 @@ public class PlanetService {
         mercury.setComposition("Iron, Nickel, Silicate");
         planets.add(mercury);
 
-        // Venus
+// Venus
         PlanetResponse venus = new PlanetResponse();
         venus.setId("venus");
         venus.setName("Venus");
@@ -38,7 +38,7 @@ public class PlanetService {
         venus.setRadius(0.949);
         venus.setSemiMajorAxis(0.723);
         venus.setOrbitalPeriod(225);
-        venus.setImageUrl("https://solarsystem.nasa.gov/system/stellar_items/image_files/3_feature_1600x900_venus_jpl.jpg");
+        venus.setImageUrl("https://pixabay.com/get/g284c82da60c405c530680e214c8803d3e53ba185fdd63114cc2bb1d11dbfeaaa1eed143180337a9e490ef44773f60243_1280.jpg");
         venus.setHasRings(false);
         venus.setMoonCount(0);
         venus.setType("terrestrial");
@@ -47,7 +47,7 @@ public class PlanetService {
         venus.setComposition("Carbon dioxide, Nitrogen");
         planets.add(venus);
 
-        // Earth
+// Earth
         PlanetResponse earth = new PlanetResponse();
         earth.setId("earth");
         earth.setName("Earth");
@@ -56,7 +56,7 @@ public class PlanetService {
         earth.setRadius(1.0);
         earth.setSemiMajorAxis(1.0);
         earth.setOrbitalPeriod(365.25);
-        earth.setImageUrl("https://solarsystem.nasa.gov/system/stellar_items/image_files/4_feature_1600x900_earth.jpg");
+        earth.setImageUrl("https://pixabay.com/get/g0c3c0a64722da4493ca95a1091ca1d78a94be21056d9a0a685a9edb02aac0af9379074787605eab3a66582867b744eb2c9cabbae6869808a8497e4e49017285e_1280.jpg");
         earth.setHasRings(false);
         earth.setMoonCount(1);
         earth.setType("terrestrial");
@@ -65,7 +65,7 @@ public class PlanetService {
         earth.setComposition("Nitrogen, Oxygen");
         planets.add(earth);
 
-        // Mars
+// Mars
         PlanetResponse mars = new PlanetResponse();
         mars.setId("mars");
         mars.setName("Mars");
@@ -74,7 +74,7 @@ public class PlanetService {
         mars.setRadius(0.532);
         mars.setSemiMajorAxis(1.524);
         mars.setOrbitalPeriod(687);
-        mars.setImageUrl("https://solarsystem.nasa.gov/system/stellar_items/image_files/6_mars_1600x900.jpg");
+        mars.setImageUrl("https://pixabay.com/get/g51efae7b9722fec4b5eed2275b5ddc40c59362b7b2add133cfae89f12cc2118da29de08b3cb816b40701c92576d3d9aa_1280.jpg");
         mars.setHasRings(false);
         mars.setMoonCount(2);
         mars.setType("terrestrial");
@@ -83,7 +83,7 @@ public class PlanetService {
         mars.setComposition("Iron oxide, Silicon dioxide");
         planets.add(mars);
 
-        // Jupiter
+// Jupiter
         PlanetResponse jupiter = new PlanetResponse();
         jupiter.setId("jupiter");
         jupiter.setName("Jupiter");
@@ -92,7 +92,7 @@ public class PlanetService {
         jupiter.setRadius(11.21);
         jupiter.setSemiMajorAxis(5.2);
         jupiter.setOrbitalPeriod(4333);
-        jupiter.setImageUrl("https://solarsystem.nasa.gov/system/stellar_items/image_files/7_feature_1600x900_jupiter_juno.jpg");
+        jupiter.setImageUrl("https://pixabay.com/get/g60ff5a007a8bdc55b7972fb414ad2ba0497f9ba81d448360af27e4b90828f23fe2602af97e16296a40ff2c35e285877b10925698389c1b4580e808034e927364_1280.jpg");
         jupiter.setHasRings(true);
         jupiter.setMoonCount(79);
         jupiter.setType("gas giant");
@@ -101,7 +101,7 @@ public class PlanetService {
         jupiter.setComposition("Hydrogen, Helium");
         planets.add(jupiter);
 
-        // Saturn
+// Saturn
         PlanetResponse saturn = new PlanetResponse();
         saturn.setId("saturn");
         saturn.setName("Saturn");
@@ -119,7 +119,7 @@ public class PlanetService {
         saturn.setComposition("Hydrogen, Helium");
         planets.add(saturn);
 
-        // Uranus
+// Uranus
         PlanetResponse uranus = new PlanetResponse();
         uranus.setId("uranus");
         uranus.setName("Uranus");
@@ -137,7 +137,7 @@ public class PlanetService {
         uranus.setComposition("Hydrogen, Helium, Methane");
         planets.add(uranus);
 
-        // Neptune
+// Neptune
         PlanetResponse neptune = new PlanetResponse();
         neptune.setId("neptune");
         neptune.setName("Neptune");
@@ -146,7 +146,7 @@ public class PlanetService {
         neptune.setRadius(3.88);
         neptune.setSemiMajorAxis(30.05);
         neptune.setOrbitalPeriod(60190);
-        neptune.setImageUrl("https://solarsystem.nasa.gov/system/stellar_items/image_files/90_feature_1600x900_neptune_new.jpg");
+        neptune.setImageUrl("https://pixabay.com/get/g90b4bf4a0cf6c1120257530a739cbe7661d9accaa32bf05eb11f56d97bf10e32b10bd1aaddd6cb8bfaf074aaf396b112_1280.jpg");
         neptune.setHasRings(true);
         neptune.setMoonCount(14);
         neptune.setType("ice giant");
