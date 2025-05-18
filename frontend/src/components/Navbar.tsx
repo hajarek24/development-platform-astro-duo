@@ -1,6 +1,7 @@
-import { Box, Flex, Link, Button, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, Link, Button, useColorModeValue, Image } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 import { FaRocket, FaNewspaper, FaGlobe, FaImage, FaCompass, FaInfoCircle, FaUser } from 'react-icons/fa'
+import logo from '../assets/logo.svg'
 
 const Navbar = () => {
   const bgColor = useColorModeValue('gray.800', 'gray.900')
@@ -25,7 +26,11 @@ const Navbar = () => {
           fontWeight="bold"
           color="white"
           _hover={{ textDecoration: 'none', color: hoverColor }}
+          display="flex"
+          alignItems="center"
+          gap={3}
         >
+          <Image src={logo} alt="Logo" boxSize="32px" />
           Space Gateway
         </Link>
 
