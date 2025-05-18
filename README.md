@@ -70,13 +70,13 @@ Credits, acknowledgments, and contact information
 
 Below is the use case diagram that illustrates the core functionality of Space Gateway and how users interact with the system:
 
-![Space Gateway Use Case Diagram](C:\Users\Macbook\projetspring\development-platform-astro-duo\assets\usecaseastroduo.png)
+![Space Gateway Use Case Diagram](./assets/usecaseastroduo.png)
 
 ## **APIs Used**
 
 Below is a table listing all the APIs used in this project, along with a brief description of their purpose.
 
-![Space Gateway Use Case Diagram](C:\Users\Macbook\projetspring\development-platform-astro-duo\assets\apis.png)
+![APIs Used Diagram](./assets/apis.png)
 
 
 ## **Tech Stack**
@@ -119,5 +119,5 @@ After starting both frontend and backend servers:
 
 Open your browser and navigate to http://localhost:3001 (the port specified in Vite config)
 
-
+___________________________________________________________________________________________________
 Developed with ❤️ for space enthusiasts everywhere
