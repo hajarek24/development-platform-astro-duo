@@ -29,7 +29,7 @@ License
 **Search Functionality:** Find specific content across articles, images, and exploration data  
 
 
-**Pages Overview**
+## **Pages Overview**
 
 **Home**
 
@@ -80,9 +80,9 @@ Below is a table listing all the APIs used in this project, along with a brief d
 
 ## **Tech Stack**
 
-*Frontend*: React, TypeScript, Chakra UI, Axios
-*Backend*: Spring Boot (Java), RestTemplate
-*Build Tools*: Vite (frontend), Maven (backend)
+**Frontend**: React, TypeScript, Chakra UI, Axios  
+**Backend**: Spring Boot (Java), RestTemplate  
+**Build Tools**: Vite (frontend), Maven (backend)  
 
 ## **Setup Instructions**
 
