@@ -25,6 +25,7 @@ interface SpaceMission {
   launch_date: string
   description: string
   agency: string
+  imageUrl?: string // <-- Add this line
 }
 
 interface SpaceEvent {
@@ -32,6 +33,7 @@ interface SpaceEvent {
   date: string
   description: string
   type: string
+  imageUrl?: string // <-- Add this line
 }
 
 const Explore = () => {
@@ -41,64 +43,21 @@ const Explore = () => {
   const cardBg = useColorModeValue('gray.700', 'gray.800')
 
   useEffect(() => {
-    // Fetch space missions (mock data for now)
+    // Fetch space missions from backend
     const fetchMissions = async () => {
       try {
-        // This would be replaced with actual API calls
-        const mockMissions: SpaceMission[] = [
-          {
-            name: 'Artemis II',
-            status: 'Upcoming',
-            launch_date: '2024-11-01',
-            description: 'First crewed mission of the Artemis program',
-            agency: 'NASA',
-          },
-          {
-            name: 'James Webb Space Telescope',
-            status: 'Active',
-            launch_date: '2021-12-25',
-            description: 'Next-generation space telescope',
-            agency: 'NASA/ESA',
-          },
-          {
-            name: 'Starship',
-            status: 'Development',
-            launch_date: 'TBD',
-            description: 'Fully reusable launch vehicle',
-            agency: 'SpaceX',
-          },
-        ]
-        setMissions(mockMissions)
+        const response = await axios.get('http://localhost:3000/api/explore/missions')
+        setMissions(response.data)
       } catch (error) {
         console.error('Error fetching missions:', error)
       }
     }
 
-    // Fetch space events (mock data for now)
+    // Fetch space events from backend
     const fetchEvents = async () => {
       try {
-        // This would be replaced with actual API calls
-        const mockEvents: SpaceEvent[] = [
-          {
-            title: 'Total Solar Eclipse',
-            date: '2024-04-08',
-            description: 'Visible across North America',
-            type: 'Eclipse',
-          },
-          {
-            title: 'Perseid Meteor Shower',
-            date: '2024-08-12',
-            description: 'Annual meteor shower',
-            type: 'Meteor Shower',
-          },
-          {
-            title: 'Mars Opposition',
-            date: '2025-01-16',
-            description: 'Mars will be at its closest approach to Earth',
-            type: 'Planetary Event',
-          },
-        ]
-        setEvents(mockEvents)
+        const response = await axios.get('http://localhost:3000/api/explore/events')
+        setEvents(response.data)
       } catch (error) {
         console.error('Error fetching events:', error)
       }
@@ -139,6 +98,13 @@ const Explore = () => {
                   <Card key={index} bg={cardBg}>
                     <CardBody>
                       <VStack align="start" spacing={3}>
+                        {mission.imageUrl && (
+                          <img
+                            src={mission.imageUrl}
+                            alt={mission.name}
+                            style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px' }}
+                          />
+                        )}
                         <HStack justify="space-between" w="100%">
                           <Heading size="md">{mission.name}</Heading>
                           <Badge colorScheme={getStatusColor(mission.status)}>
@@ -165,6 +131,13 @@ const Explore = () => {
                   <Card key={index} bg={cardBg}>
                     <CardBody>
                       <VStack align="start" spacing={3}>
+                        {event.imageUrl && (
+                          <img
+                            src={event.imageUrl}
+                            alt={event.title}
+                            style={{ width: '100%', height: '180px', objectFit: 'cover', borderRadius: '8px' }}
+                          />
+                        )}
                         <HStack justify="space-between" w="100%">
                           <Heading size="md">{event.title}</Heading>
                           <Badge colorScheme="purple">{event.type}</Badge>
@@ -186,4 +159,4 @@ const Explore = () => {
   )
 }
 
-export default Explore 
+export default Explore
