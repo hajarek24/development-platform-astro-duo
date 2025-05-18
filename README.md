@@ -153,10 +153,10 @@ mvn clean install
 # Run the application (e.g., SpaceGatewayApplication.java)
 mvn spring-boot:run
 ```
-## 🧱 Perspectives and Improvements
+## 🚀 Perspectives and Improvements
 To ensure the continued scalability and adaptability of Space Gateway, several enhancements can be considered for future iterations:
 
-### Microservices Architecture
+### 🧱 Microservices Architecture
 Refactor the current monolithic backend into independent microservices, such as:
 
 - **Planet Service** – manages planetary data
@@ -170,7 +170,7 @@ This modular approach enables:
 - Better fault isolation and maintainability
 - Easier integration with other systems in the future
 
-### Deployment
+### ☁️ Deployment
 Deploying the system with:
 
 - Docker containers for each service
@@ -180,7 +180,7 @@ Deploying the system with:
 This would support horizontal scaling and improve overall availability.
 
 
-### Secure Authentication
+### 🔒 Secure Authentication
 Implement OAuth2.0 and JWT-based authentication for:
 
 - User login with Google, GitHub, etc.
