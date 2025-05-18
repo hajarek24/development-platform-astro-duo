@@ -20,10 +20,15 @@ const Footer = () => (
         <Link href="/about">About</Link>
       </VStack>
       <VStack align="start" spacing={2}>
-        <Heading as="h3" size="md" mb={2} color="white">NASA Resources</Heading>
+        <Heading as="h3" size="md" mb={2} color="white">API Resources</Heading>
         <Link href="https://www.nasa.gov/" isExternal>NASA Official Site</Link>
         <Link href="https://apod.nasa.gov/apod/astropix.html" isExternal>Astronomy Picture of the Day</Link>
         <Link href="https://api.nasa.gov/" isExternal>NASA Open APIs</Link>
+        <Link href="https://api.le-systeme-solaire.net/" isExternal>Le Systeme Solaire API</Link>
+        <Link href="https://spaceflightnewsapi.net/" isExternal>Spaceflight News API</Link>
+        <Link href="https://newsapi.org/" isExternal>NewsAPI</Link>
+        <Link href="https://thespacedevs.com/llapi" isExternal>Launch Library 2 API (The Space Devs)</Link>
+        <Link href="https://www.mediawiki.org/wiki/API:Main_page" isExternal>Wikipedia API</Link>
       </VStack>
       <VStack align="start" spacing={2} pr={12}>
         <Heading as="h3" size="md" mb={2} color="white">Connect With Us</Heading>
@@ -31,12 +36,12 @@ const Footer = () => (
           <Link href="#" aria-label="Twitter"><Icon as={FaTwitter} boxSize={5} /></Link>
           <Link href="#" aria-label="Facebook"><Icon as={FaFacebook} boxSize={5} /></Link>
           <Link href="#" aria-label="Instagram"><Icon as={FaInstagram} boxSize={5} /></Link>
-          <Link href="#" aria-label="GitHub"><Icon as={FaGithub} boxSize={5} /></Link>
+          <Link href="https://github.com/m-elhamlaoui/development-platform-astro-duo.git" aria-label="GitHub"><Icon as={FaGithub} boxSize={5} /></Link>
         </HStack>
       </VStack>
     </SimpleGrid>
     <Text textAlign="center" fontSize="sm" color="gray.500">
-      © 2025 Space Gateway. All data provided by NASA APIs.
+      © 2025 Space Gateway. All data provided by NASA and other APIs.
     </Text>
   </Box>
 );
