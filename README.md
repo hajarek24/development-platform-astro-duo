@@ -88,7 +88,7 @@ The following diagram illustrates the core functionalities of Space Gateway and 
 
 📌 **Note**: See the diagram below for a visual summary of the external APIs used.
 
-![APIs Used Diagram](./assets/apis.png)
+![APIs Used Diagram](./assets/api_table.png)
 
 ---
 
