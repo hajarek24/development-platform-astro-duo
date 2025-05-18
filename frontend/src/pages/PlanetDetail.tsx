@@ -20,11 +20,17 @@ interface PlanetResponse {
   id: string;
   name: string;
   description: string;
-  diameter: number;
-  distanceFromSun: number;
-  numberOfMoons: number;
+  mass: number;
+  radius: number;
+  semiMajorAxis: number;
+  orbitalPeriod: number;
   imageUrl?: string;
+  hasRings: boolean;
+  moonCount: number;
   type: string;
+  surfaceGravity: number;
+  surfaceTemperature: number;
+  composition: string;
 }
 
 const PlanetDetail: React.FC = () => {
@@ -86,75 +92,53 @@ const PlanetDetail: React.FC = () => {
   }
 
   return (
-    <Box p={8} maxW="1200px" mx="auto">
-      <Button mb={8} colorScheme="blue" onClick={() => navigate('/planets')}>
-        ← Back to Planets
-      </Button>
-      
-      <VStack spacing={8} align="stretch">
-        <Heading as="h1" size="2xl" textAlign="center" color="white">
-          {planet.name}
-        </Heading>
-        
-        <Box borderRadius="lg" overflow="hidden" boxShadow="xl">
-          {planet.imageUrl ? (
-            <Image
-              src={planet.imageUrl}
-              alt={planet.name}
-              w="100%"
-              maxH="500px"
-              objectFit="cover"
-            />
-          ) : (
-            <Box 
-              bg="gray.700" 
-              h="300px" 
-              display="flex" 
-              alignItems="center" 
-              justifyContent="center"
-            >
-              <Text color="gray.400">No image available</Text>
-            </Box>
-          )}
-        </Box>
-        
-        <Box bg="gray.800" p={6} borderRadius="md">
-          <Text color="gray.300" fontSize="lg" whiteSpace="pre-line">
-            {planet.description}
-          </Text>
-        </Box>
-        
-        <Divider />
-        
-        <Box>
-          <Heading as="h3" size="md" color="blue.300" mb={4}>
-            Planet Facts
-          </Heading>
-          
-          <VStack spacing={4} align="stretch" bg="gray.800" p={6} borderRadius="md">
-            <HStack justify="space-between">
-              <Text color="gray.300">Type:</Text>
-              <Badge colorScheme="purple" fontSize="md">{planet.type}</Badge>
-            </HStack>
-            
-            <HStack justify="space-between">
-              <Text color="gray.300">Diameter:</Text>
-              <Text color="white">{planet.diameter.toLocaleString()} km</Text>
-            </HStack>
-            
-            <HStack justify="space-between">
-              <Text color="gray.300">Distance from Sun:</Text>
-              <Text color="white">{planet.distanceFromSun.toLocaleString()} km</Text>
-            </HStack>
-            
-            <HStack justify="space-between">
-              <Text color="gray.300">Number of Moons:</Text>
-              <Text color="white">{planet.numberOfMoons}</Text>
-            </HStack>
-          </VStack>
-        </Box>
-      </VStack>
-    </Box>
+    <Box>
+  <Heading as="h3" size="md" color="blue.300" mb={4}>
+    Planet Facts
+  </Heading>
+  <VStack spacing={4} align="stretch" bg="gray.800" p={6} borderRadius="md">
+    <HStack justify="space-between">
+      <Text color="gray.300">Type:</Text>
+      <Badge colorScheme="purple" fontSize="md">{planet.type}</Badge>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Mass:</Text>
+      <Text color="white">{planet.mass.toLocaleString()} Earth masses</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Radius:</Text>
+      <Text color="white">{planet.radius.toLocaleString()} Earth radii</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Semi-Major Axis:</Text>
+      <Text color="white">{planet.semiMajorAxis.toLocaleString()} AU</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Orbital Period:</Text>
+      <Text color="white">{planet.orbitalPeriod.toLocaleString()} days</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Moons:</Text>
+      <Text color="white">{planet.moonCount}</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Has Rings:</Text>
+      <Text color="white">{planet.hasRings ? 'Yes' : 'No'}</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Surface Gravity:</Text>
+      <Text color="white">{planet.surfaceGravity} g</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Surface Temperature:</Text>
+      <Text color="white">{planet.surfaceTemperature} K</Text>
+    </HStack>
+    <HStack justify="space-between">
+      <Text color="gray.300">Composition:</Text>
+      <Text color="white">{planet.composition}</Text>
+    </HStack>
+  </VStack>
+</Box>
   )
 }
 
