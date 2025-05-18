@@ -185,3 +185,6 @@ Implement OAuth2.0 and JWT-based authentication for:
 
 - User login with Google, GitHub, etc.
 - Secure access to personalized features and admin endpoints
+
+### 🪐 3D Interactive Space Map
+- 🚀 A 3D exploration map to enhance spatial navigation and interactivity.
