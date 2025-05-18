@@ -13,10 +13,8 @@ Pages Overview
 Use Case Diagram  
 APIs Used  
 Tech Stack  
-Installation  
+Setup Instructions    
 Usage   
-Contributing  
-License  
 
 ## **Features**
 
@@ -109,8 +107,7 @@ cd ../backend
 # Compiler le projet
 mvn clean install
 
-# Exécuter l'application
-executez ..\SpaceGatewayApplication.java
+# Exécuter l'application ..\SpaceGatewayApplication.java
 ```
 
 ## **Usage**
