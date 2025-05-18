@@ -30,8 +30,8 @@ public class ImageLibraryService {
                 .bodyToMono(ImageLibraryResponse.class);
     }
 
-    public Mono<ImageLibraryResponse> getLatestArticles(int count) {
-        // For articles, we search for "news" content
-        return searchImages("space news", 1, count);
-    }
+    // public Mono<ImageLibraryResponse> getLatestArticles(int count) {
+    //     // For articles, we search for "news" content
+    //     return searchImages("space news", 1, count);
+    // }
 }

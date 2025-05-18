@@ -9,6 +9,8 @@ import {
   Button
 } from '@chakra-ui/react'
 
+// ...existing imports...
+
 const ArticleDetail: React.FC = () => {
   const location = useLocation()
   const { article } = location.state || {}
@@ -29,7 +31,7 @@ const ArticleDetail: React.FC = () => {
     <Container maxW="800px" py={8}>
       <VStack align="start" spacing={4}>
         <Image
-          src={article.imageUrl}
+          src={article.urlToImage || 'https://via.placeholder.com/300'}
           alt={article.title}
           borderRadius="md"
           width="100%"
@@ -37,11 +39,11 @@ const ArticleDetail: React.FC = () => {
         />
         <Heading>{article.title}</Heading>
         <Text fontSize="sm" color="gray.500">
-          By {article.author} • {new Date(article.date).toLocaleDateString()}
+          {article.source?.name} • {new Date(article.publishedAt).toLocaleDateString()}
         </Text>
-        <Text mt={4}>{article.content}</Text>
-        <Button as={RouterLink} to="/articles" mt={6} colorScheme="blue">
-          ← Back to Articles
+        <Text mt={4}>{article.content || article.description}</Text>
+        <Button as="a" href={article.url} target="_blank" rel="noopener noreferrer" colorScheme="teal" mt={2}>
+          Read Full Article
         </Button>
       </VStack>
     </Container>

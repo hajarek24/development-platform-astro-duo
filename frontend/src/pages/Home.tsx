@@ -34,10 +34,14 @@ interface APODData {
 }
 
 interface Article {
-  id: string
-  title: string
-  description: string
-  url: string
+  title: string;
+  url: string;
+  urlToImage?: string;
+  source: { id?: string; name: string };
+  description?: string;
+  publishedAt: string;
+  author?: string;
+  content?: string;
 }
 
 const Home = () => {
@@ -69,19 +73,20 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    const fetchArticles = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/images/articles', {
-          params: { count: 3 },
-        })
-        setArticles(response.data)
-      } catch (error) {
-        console.error('Error fetching articles:', error)
-      }
+  const fetchArticles = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/articles/spaceflight-news')
+      // Pick the first 3 articles as "featured"
+      setArticles(response.data.articles.slice(0, 3))
+    } catch (error) {
+      console.error('Error fetching articles:', error)
     }
+  }
 
-    fetchArticles()
-  }, [])
+  fetchArticles()
+}, [])
+
+
 
   return (
     <Container maxW="1200px" py={8}>
@@ -150,7 +155,7 @@ const Home = () => {
         </Box>
 
         {/* Search Bar */}
-        <Box>
+        {/* <Box>
           <InputGroup size="lg">
             <Input
               placeholder="Search space-related content..."
@@ -168,41 +173,53 @@ const Home = () => {
               />
             </InputRightElement>
           </InputGroup>
-        </Box>
+        </Box> */}
 
         {/* Featured Articles */}
-        <Box>
-          <Heading size="lg" mb={4}>
-            Featured Articles
-          </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
-            {articles.length > 0 ? (
-              articles.map((article) => (
-                <Card key={article.id} bg={cardBg}>
-                  <CardBody>
-                    <VStack align="start" spacing={3}>
-                      <Heading size="sm">{article.title}</Heading>
-                      <Text>{article.description}</Text>
-                      <Button
-                        colorScheme="blue"
-                        size="sm"
-                        as="a"
-                        href={article.url}
-                        target="_blank"
-                      >
-                        Read More
-                      </Button>
-                    </VStack>
-                  </CardBody>
-                </Card>
-              ))
-            ) : (
-              <Box textAlign="center" py={8}>
-                <Spinner size="xl" />
-              </Box>
-            )}
-          </SimpleGrid>
-        </Box>
+          <Box>
+    <Heading size="lg" mb={4}>
+      Featured Articles
+    </Heading>
+    <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={4}>
+  {articles.length > 0 ? (
+    articles.map((article) => (
+      <Card key={article.url} bg={cardBg}>
+        <CardBody>
+          <VStack align="start" spacing={3}>
+            <Image
+              src={article.urlToImage || 'https://via.placeholder.com/300'}
+              alt={article.title}
+              borderRadius="lg"
+              mb={2}
+              height="180px"
+              objectFit="cover"
+              width="100%"
+            />
+            <Heading size="sm">{article.title}</Heading>
+            <Text fontSize="sm" color="gray.400">
+              {article.source?.name} • {new Date(article.publishedAt).toLocaleDateString()}
+            </Text>
+            <Text noOfLines={3}>{article.description}</Text>
+            <Button
+              colorScheme="blue"
+              size="sm"
+              as="a"
+              href={article.url}
+              target="_blank"
+            >
+              Read More
+            </Button>
+          </VStack>
+        </CardBody>
+      </Card>
+    ))
+  ) : (
+    <Box textAlign="center" py={8}>
+      <Spinner size="xl" />
+    </Box>
+  )}
+</SimpleGrid>
+  </Box>
       </VStack>
     </Container>
   )

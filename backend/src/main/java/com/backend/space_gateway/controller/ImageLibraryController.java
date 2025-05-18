@@ -27,11 +27,11 @@ public class ImageLibraryController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/articles")
-    public Mono<ResponseEntity<ImageLibraryResponse>> getArticles(
-            @RequestParam(defaultValue = "10") int count) {
-        return imageLibraryService.getLatestArticles(count)
-                .map(ResponseEntity::ok)
-                .defaultIfEmpty(ResponseEntity.notFound().build());
-    }
+//    @GetMapping("/articles")
+//    public Mono<ResponseEntity<ImageLibraryResponse>> getArticles(
+//            @RequestParam(defaultValue = "10") int count) {
+//        return imageLibraryService.getLatestArticles(count)
+//                .map(ResponseEntity::ok)
+//                .defaultIfEmpty(ResponseEntity.notFound().build());
+//    }
 }

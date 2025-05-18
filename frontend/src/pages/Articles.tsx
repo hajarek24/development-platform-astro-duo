@@ -12,7 +12,6 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
-  Grid,
   Image,
   Spinner,
   Center,
@@ -23,35 +22,15 @@ import { FaSearch } from 'react-icons/fa'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 
-// Updated interface to match the expected response from /api/images/articles
-interface ArticleItem {
-  data: {
-    title: string;
-    description: string;
-    date_created: string;
-    center: string;
-    nasa_id: string;
-  }[];
-  links: {
-    href: string;
-    rel: string;
-  }[];
-}
-
-interface ImageLibraryResponse {
-  collection: {
-    items: ArticleItem[];
-  };
-}
-
-// Transformed article to match your UI
 interface Article {
-  id: string;
   title: string;
-  content: string;
-  author: string;
-  date: string;
-  imageUrl: string;
+  url: string;
+  urlToImage?: string;
+  source: { id?: string; name: string };
+  description?: string;
+  publishedAt: string;
+  author?: string;
+  content?: string;
 }
 
 const Articles: React.FC = () => {
@@ -63,38 +42,26 @@ const Articles: React.FC = () => {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/images/articles')
-
+        const response = await axios.get('http://localhost:3000/api/articles/spaceflight-news');
         if (response.status !== 200) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
+          throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
-        const data: ImageLibraryResponse = response.data
-        const transformedArticles: Article[] = data.collection.items.map(item => ({
-          id: item.data[0]?.nasa_id || Math.random().toString(),
-          title: item.data[0]?.title || 'Untitled Article',
-          content: item.data[0]?.description || 'No content available',
-          author: item.data[0]?.center || 'NASA',
-          date: item.data[0]?.date_created || new Date().toISOString(),
-          imageUrl: item.links[0]?.href || 'https://via.placeholder.com/300'
-        }))
-
-        setArticles(transformedArticles)
+        setArticles(response.data.articles);
       } catch (err) {
-        console.error('Error fetching articles:', err)
-        setError('Failed to fetch articles')
+        console.error('Error fetching articles:', err);
+        setError('Failed to fetch articles');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-
-    fetchArticles()
-  }, [])
+    };
+    fetchArticles();
+  }, []);
 
   const filteredArticles = articles.filter(article =>
     article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    article.content.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+    (article.description && article.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    (article.content && article.content.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -152,15 +119,15 @@ const Articles: React.FC = () => {
           <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6} width="100%">
             {filteredArticles.map((article) => (
               <Link
-                to={`/articles/${article.id}`}
+                to={`/articles/${encodeURIComponent(article.url)}`}
                 state={{ article }}
-                key={article.id}
+                key={article.url}
                 style={{ textDecoration: 'none' }}
               >
                 <Card bg="gray.700" color="white" _hover={{ transform: 'scale(1.02)', transition: '0.2s' }}>
                   <CardBody>
                     <Image
-                      src={article.imageUrl}
+                      src={article.urlToImage || 'https://via.placeholder.com/300'}
                       alt={article.title}
                       borderRadius="lg"
                       mb={4}
@@ -171,9 +138,9 @@ const Articles: React.FC = () => {
                     <VStack align="start" spacing={2}>
                       <Heading size="md">{article.title}</Heading>
                       <Text fontSize="sm" color="gray.400">
-                        By {article.author} • {new Date(article.date).toLocaleDateString()}
+                        {article.source?.name} • {new Date(article.publishedAt).toLocaleDateString()}
                       </Text>
-                      <Text noOfLines={3}>{article.content}</Text>
+                      <Text noOfLines={3}>{article.description}</Text>
                     </VStack>
                   </CardBody>
                 </Card>
