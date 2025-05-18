@@ -88,7 +88,7 @@ The following diagram illustrates the core functionalities of Space Gateway and 
 
 📌 **Note**: See the diagram below for a visual summary of the external APIs used.
 
-![APIs Used Diagram](./assets/apis.png)
+![APIs Used Diagram](./assets/api_table.png)
 
 ---
 
@@ -185,3 +185,6 @@ Implement OAuth2.0 and JWT-based authentication for:
 
 - User login with Google, GitHub, etc.
 - Secure access to personalized features and admin endpoints
+
+### 🪐 3D Interactive Space Map
+- 🚀 A 3D exploration map to enhance spatial navigation and interactivity.
