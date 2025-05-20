@@ -1,6 +1,13 @@
-// filepath: Jenkinsfile
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'maven:3.9.6-eclipse-temurin-17'
+      args '-v /var/run/docker.sock:/var/run/docker.sock'
+    }
+  }
+  environment {
+    NODE_VERSION = '18'
+  }
   stages {
     stage('Build Backend') {
       steps {
@@ -12,8 +19,15 @@ pipeline {
     stage('Build Frontend') {
       steps {
         dir('frontend') {
-          sh 'npm install'
-          sh 'npm run build'
+          // Installe Node.js 18 si besoin
+          sh '''
+            if ! command -v node || [ "$(node -v | cut -d. -f1 | tr -d v)" -lt "$NODE_VERSION" ]; then
+              curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash -
+              apt-get install -y nodejs
+            fi
+            npm install
+            npm run build
+          '''
         }
       }
     }
