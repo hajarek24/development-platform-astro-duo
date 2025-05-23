@@ -1,4 +1,4 @@
-import { useLocation, useParams, Link as RouterLink } from 'react-router-dom'
+import { useLocation, Link as RouterLink } from 'react-router-dom'
 import {
   Container,
   Heading,
