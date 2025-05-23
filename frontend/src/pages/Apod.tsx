@@ -33,7 +33,7 @@ const Apod: React.FC = () => {
         const data = await response.json();
         console.log('Received data:', data);
         setApod(data);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching APOD:', err);
         // More specific error message based on error type
         if (err instanceof TypeError && err.message.includes('Failed to fetch')) {

@@ -9,17 +9,12 @@ import {
   Card,
   CardBody,
   VStack,
-  Input,
-  InputGroup,
-  InputRightElement,
   Button,
-  IconButton,
   useColorModeValue,
   Spinner,
   Alert,
   AlertIcon,
 } from '@chakra-ui/react'
-import { FaSearch } from 'react-icons/fa'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
@@ -46,11 +41,9 @@ interface Article {
 
 const Home = () => {
   const [apod, setApod] = useState<APODData | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [articles, setArticles] = useState<Article[]>([])
-  const bgColor = useColorModeValue('gray.800', 'gray.900')
   const cardBg = useColorModeValue('gray.700', 'gray.800')
   const navigate = useNavigate()
 

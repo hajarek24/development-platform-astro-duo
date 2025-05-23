@@ -1,6 +1,5 @@
 import { useLocation, useParams, Link as RouterLink } from 'react-router-dom'
 import {
-  Box,
   Container,
   Heading,
   Text,
@@ -14,7 +13,6 @@ import {
 const ArticleDetail: React.FC = () => {
   const location = useLocation()
   const { article } = location.state || {}
-  const { id } = useParams()
 
   if (!article) {
     return (

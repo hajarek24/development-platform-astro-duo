@@ -1,4 +1,4 @@
-import { Box, Heading, Text, VStack, List, ListItem, Divider, Link, Image, SimpleGrid, Code } from '@chakra-ui/react'
+import { Box, Heading, Text, VStack, List, ListItem, Divider, Link, Image, SimpleGrid } from '@chakra-ui/react'
 import logo from '../assets/logo.svg'
 
 const About = () => (

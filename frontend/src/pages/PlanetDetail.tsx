@@ -3,15 +3,12 @@ import {
   Box,
   Heading,
   Text,
-  Image,
   VStack,
   HStack,
   Badge,
   Spinner,
   Center,
-  Button,
-  Divider,
-  useColorModeValue
+  Button
 } from '@chakra-ui/react'
 import { useParams, useNavigate } from 'react-router-dom'
 

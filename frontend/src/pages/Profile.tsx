@@ -23,7 +23,6 @@ import { FaUser, FaBookmark, FaImage } from 'react-icons/fa'
 
 const Profile = () => {
   const [activeTab, setActiveTab] = useState(0)
-  const bgColor = useColorModeValue('gray.800', 'gray.900')
   const cardBg = useColorModeValue('gray.700', 'gray.800')
 
   // Mock data for saved content

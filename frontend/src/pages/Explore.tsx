@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import {
-  Box,
   Container,
   Heading,
   SimpleGrid,
@@ -39,7 +38,6 @@ interface SpaceEvent {
 const Explore = () => {
   const [missions, setMissions] = useState<SpaceMission[]>([])
   const [events, setEvents] = useState<SpaceEvent[]>([])
-  const bgColor = useColorModeValue('gray.800', 'gray.900')
   const cardBg = useColorModeValue('gray.700', 'gray.800')
 
   useEffect(() => {
