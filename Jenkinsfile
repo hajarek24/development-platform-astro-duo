@@ -49,23 +49,15 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // Use Docker with Node.js 20 and optimized build configuration
+                        // Use a simpler approach with proper escaping
                         sh '''
-                            docker run --rm \
-                                -v "${WORKSPACE}/frontend:/workspace" \
-                                -w /workspace \
-                                -e NODE_ENV=production \
-                                -e CI=true \
-                                node:20 \
-                                sh -c "echo 'Node version:' && node --version && \
-                                      echo 'NPM version:' && npm --version && \
-                                      echo 'Directory contents:' && ls -la && \
-                                      echo 'Cleaning npm cache...' && \
-                                      npm cache clean --force && \
-                                      echo 'Installing dependencies...' && \
-                                      npm install --legacy-peer-deps --prefer-offline && \
-                                      echo 'Building...' && \
-                                      npm run build"
+                        docker run --rm \\
+                            -v "${WORKSPACE}/frontend:/workspace" \\
+                            -w /workspace \\
+                            -e NODE_ENV=production \\
+                            -e CI=true \\
+                            node:20 \\
+                            bash -c "echo 'Node version:' && node --version && echo 'NPM version:' && npm --version && echo 'Directory contents:' && ls -la && echo 'Cleaning npm cache...' && npm cache clean --force && echo 'Installing dependencies...' && npm install --legacy-peer-deps --prefer-offline && echo 'Building...' && npm run build"
                         '''
                     }
                 }
