@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: space-gateway-config
+data:
+  application.yml: |
+    spring:
+      application:
+        name: space-gateway
+      profiles:
+        active: prod
+    server:
+      port: 8080
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health,info,metrics
+      endpoint:
+        health:
+          show-details: always 

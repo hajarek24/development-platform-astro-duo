@@ -64,12 +64,6 @@ pipeline {
         }
         
         stage('Deploy to Kubernetes') {
-            when {
-                // Only deploy if k8s directory exists
-                expression {
-                    return fileExists('k8s/')
-                }
-            }
             steps {
                 script {
                     // Check if kubectl is available
