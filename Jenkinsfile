@@ -46,10 +46,15 @@ pipeline {
         }
         
         stage('Build Frontend') {
+            when {
+                expression {
+                    return fileExists('frontend/package.json')
+                }
+            }
             steps {
                 dir('frontend') {
                     script {
-                        // Use a simpler approach with proper escaping
+                        echo "Building frontend with Docker..."
                         sh '''
                         docker run --rm \\
                             -v "${WORKSPACE}/frontend:/workspace" \\
@@ -57,7 +62,7 @@ pipeline {
                             -e NODE_ENV=production \\
                             -e CI=true \\
                             node:20 \\
-                            bash -c "echo 'Node version:' && node --version && echo 'NPM version:' && npm --version && echo 'Directory contents:' && ls -la && echo 'Cleaning npm cache...' && npm cache clean --force && echo 'Installing dependencies...' && npm install --legacy-peer-deps --prefer-offline && echo 'Building...' && npm run build"
+                            bash -c "echo 'Node version:' && node --version && echo 'NPM version:' && npm --version && echo 'Workspace contents:' && ls -la && echo 'Installing dependencies...' && npm cache clean --force && npm install --legacy-peer-deps --prefer-offline && echo 'Building...' && npm run build"
                         '''
                     }
                 }
