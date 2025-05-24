@@ -55,12 +55,12 @@ pipeline {
                             sh 'npm install && npm run build'
                         } catch (Exception e) {
                             echo 'Node.js not available, falling back to Docker...'
-                            // Use Docker as fallback
+                            // Use Docker as fallback with Node.js 18
                             sh '''
                                 docker run --rm \
                                     -v "${WORKSPACE}/frontend:/workspace" \
                                     -w /workspace \
-                                    node:16-alpine \
+                                    node:18-alpine \
                                     sh -c "ls -la && npm install && npm run build"
                             '''
                         }
