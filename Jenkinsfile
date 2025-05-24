@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_REGISTRY = 'yourrepo' // Replace with your actual Docker registry
         BACKEND_IMAGE = "${DOCKER_REGISTRY}/backend:${BUILD_NUMBER}"
-        FRONTEND_IMAGE = "${DOCKER_REGISTRY}/frontend:${BUILD_NUMBER}"
     }
     
     stages {
@@ -45,57 +44,21 @@ pipeline {
             }
         }
         
-        stage('Build Frontend') {
-            when {
-                expression {
-                    return fileExists('frontend/package.json')
-                }
-            }
-            steps {
-                dir('frontend') {
-                    script {
-                        echo "Building frontend with Docker..."
-                        sh '''
-                        docker run --rm \\
-                            -v "${WORKSPACE}/frontend:/workspace" \\
-                            -w /workspace \\
-                            -e NODE_ENV=production \\
-                            -e CI=true \\
-                            node:20 \\
-                            bash -c "echo 'Node version:' && node --version && echo 'NPM version:' && npm --version && echo 'Workspace contents:' && ls -la && echo 'Installing dependencies...' && npm cache clean --force && npm install --legacy-peer-deps --prefer-offline && echo 'Building...' && npm run build"
-                        '''
-                    }
-                }
-            }
-            post {
-                always {
-                    // Archive frontend build artifacts if they exist
-                    archiveArtifacts artifacts: 'frontend/dist/**/*', fingerprint: true, allowEmptyArchive: true
-                }
-            }
-        }
-        
         stage('Docker Build & Push') {
             steps {
                 script {
                     // Build backend image
                     def backendImage = docker.build("${BACKEND_IMAGE}", "./backend")
                     
-                    // Build frontend image  
-                    def frontendImage = docker.build("${FRONTEND_IMAGE}", "./frontend")
-                    
                     // Push images (uncomment when ready to push)
                     /*
                     docker.withRegistry('https://your-registry-url', 'docker-registry-credentials') {
                         backendImage.push()
                         backendImage.push('latest')
-                        frontendImage.push()
-                        frontendImage.push('latest')
                     }
                     */
                     
                     echo "Backend image built: ${BACKEND_IMAGE}"
-                    echo "Frontend image built: ${FRONTEND_IMAGE}"
                 }
             }
         }
@@ -117,7 +80,6 @@ pipeline {
                         if [ -d "k8s" ]; then
                             find k8s/ -name "*.yaml" -o -name "*.yml" | while read file; do
                                 sed -i "s|image: .*backend.*|image: ${BACKEND_IMAGE}|g" "$file"
-                                sed -i "s|image: .*frontend.*|image: ${FRONTEND_IMAGE}|g" "$file"
                             done
                             
                             kubectl apply -f k8s/ || echo "Kubernetes deployment failed or not configured"
