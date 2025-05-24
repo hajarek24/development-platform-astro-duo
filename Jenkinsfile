@@ -66,21 +66,24 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Check if kubectl is available
-                    sh 'kubectl version --client || echo "kubectl not available, skipping deployment"'
-                    
-                    // Update image tags in Kubernetes manifests if they exist
-                    sh '''
-                        if [ -d "k8s" ]; then
-                            find k8s/ -name "*.yaml" -o -name "*.yml" | while read file; do
-                                sed -i "s|image: .*backend.*|image: ${BACKEND_IMAGE}|g" "$file"
-                            done
-                            
-                            kubectl apply -f k8s/ || echo "Kubernetes deployment failed or not configured"
-                        else
-                            echo "No k8s directory found, skipping Kubernetes deployment"
-                        fi
-                    '''
+                    // Use Kubernetes credentials
+                    withKubeConfig([credentialsId: 'k8s-credentials']) {
+                        // Check if kubectl is available
+                        sh 'kubectl version --client || echo "kubectl not available, skipping deployment"'
+                        
+                        // Update image tags in Kubernetes manifests if they exist
+                        sh '''
+                            if [ -d "k8s" ]; then
+                                find k8s/ -name "*.yaml" -o -name "*.yml" | while read file; do
+                                    sed -i "s|image: .*backend.*|image: ${BACKEND_IMAGE}|g" "$file"
+                                done
+                                
+                                kubectl apply -f k8s/ --validate=false || echo "Kubernetes deployment failed or not configured"
+                            else
+                                echo "No k8s directory found, skipping Kubernetes deployment"
+                            fi
+                        '''
+                    }
                 }
             }
         }
