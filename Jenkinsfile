@@ -6,11 +6,6 @@ pipeline {
     DOCKER_IMAGE_FRONTEND = "hajarek24/development-platform-frontend:${BUILD_NUMBER}"
   }
 
-  tools {
-    maven 'Maven'
-    nodejs 'NodeJS'
-  }
-
   stages {
     stage('Checkout') {
       steps {
@@ -29,7 +24,7 @@ pipeline {
     stage('Build Frontend') {
       steps {
         dir('frontend') {
-          sh 'npm ci'
+          sh 'npm install'
           sh 'npm run build'
         }
       }
