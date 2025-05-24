@@ -49,14 +49,21 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // Use Docker to build with Node.js
-                        sh '''
-                            docker run --rm \
-                                -v "${WORKSPACE}/frontend:/workspace" \
-                                -w /workspace \
-                                node:16-alpine \
-                                sh -c "npm install && npm run build"
-                        '''
+                        // First try to use Node.js directly if available
+                        try {
+                            sh 'node --version'
+                            sh 'npm install && npm run build'
+                        } catch (Exception e) {
+                            echo 'Node.js not available, falling back to Docker...'
+                            // Use Docker as fallback
+                            sh '''
+                                docker run --rm \
+                                    -v "${WORKSPACE}/frontend:/workspace" \
+                                    -w /workspace \
+                                    node:16-alpine \
+                                    sh -c "ls -la && npm install && npm run build"
+                            '''
+                        }
                     }
                 }
             }
