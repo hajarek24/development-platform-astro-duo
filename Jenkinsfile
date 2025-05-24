@@ -49,21 +49,24 @@ pipeline {
             steps {
                 dir('frontend') {
                     script {
-                        // First try to use Node.js directly if available
-                        try {
-                            sh 'node --version'
-                            sh 'npm install && npm run build'
-                        } catch (Exception e) {
-                            echo 'Node.js not available, falling back to Docker...'
-                            // Use Docker as fallback with Node.js 18
-                            sh '''
-                                docker run --rm \
-                                    -v "${WORKSPACE}/frontend:/workspace" \
-                                    -w /workspace \
-                                    node:18-alpine \
-                                    sh -c "ls -la && npm install && npm run build"
-                            '''
-                        }
+                        // Use Docker with Node.js 20 and optimized build configuration
+                        sh '''
+                            docker run --rm \
+                                -v "${WORKSPACE}/frontend:/workspace" \
+                                -w /workspace \
+                                -e NODE_ENV=production \
+                                -e CI=true \
+                                node:20 \
+                                sh -c "echo 'Node version:' && node --version && \
+                                      echo 'NPM version:' && npm --version && \
+                                      echo 'Directory contents:' && ls -la && \
+                                      echo 'Cleaning npm cache...' && \
+                                      npm cache clean --force && \
+                                      echo 'Installing dependencies...' && \
+                                      npm install --legacy-peer-deps --prefer-offline && \
+                                      echo 'Building...' && \
+                                      npm run build"
+                        '''
                     }
                 }
             }
