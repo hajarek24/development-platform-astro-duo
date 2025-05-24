@@ -39,8 +39,8 @@ pipeline {
             }
             post {
                 always {
-                    // Publish test results if they exist
-                    publishTestResults testResultsPattern: 'backend/target/surefire-reports/*.xml'
+                    // Publish test results using junit step
+                    junit 'backend/target/surefire-reports/*.xml'
                 }
             }
         }
