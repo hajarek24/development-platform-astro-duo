@@ -13,22 +13,14 @@ pipeline {
                 sh 'docker --version'
                 sh 'which docker'
                 sh 'docker info'
+                sh 'mvn --version'
             }
         }
         
         stage('Build Backend') {
             steps {
                 dir('backend') {
-                    script {
-                        // Use Docker to build with Maven
-                        sh '''
-                            docker run --rm \
-                                -v $(pwd):/workspace \
-                                -w /workspace \
-                                maven:3.8.6-openjdk-17 \
-                                mvn clean package -DskipTests
-                        '''
-                    }
+                    sh 'mvn clean package -DskipTests'
                 }
             }
             post {
@@ -42,15 +34,7 @@ pipeline {
         stage('Test Backend') {
             steps {
                 dir('backend') {
-                    script {
-                        sh '''
-                            docker run --rm \
-                                -v $(pwd):/workspace \
-                                -w /workspace \
-                                maven:3.8.6-openjdk-17 \
-                                mvn test
-                        '''
-                    }
+                    sh 'mvn test'
                 }
             }
             post {
@@ -70,7 +54,7 @@ pipeline {
                             docker run --rm \
                                 -v $(pwd):/workspace \
                                 -w /workspace \
-                                node:18-alpine \
+                                node:16-alpine \
                                 sh -c "npm install && npm run build"
                         '''
                     }
