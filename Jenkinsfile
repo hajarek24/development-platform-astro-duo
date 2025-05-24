@@ -52,7 +52,7 @@ pipeline {
                         // Use Docker to build with Node.js
                         sh '''
                             docker run --rm \
-                                -v $(pwd):/workspace \
+                                -v "${WORKSPACE}/frontend:/workspace" \
                                 -w /workspace \
                                 node:16-alpine \
                                 sh -c "npm install && npm run build"
