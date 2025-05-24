@@ -66,8 +66,7 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Use Kubernetes credentials
-                    withKubeConfig([credentialsId: 'k8s-credentials']) {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                         // Check if kubectl is available
                         sh 'kubectl version --client || echo "kubectl not available, skipping deployment"'
                         
@@ -78,7 +77,7 @@ pipeline {
                                     sed -i "s|image: .*backend.*|image: ${BACKEND_IMAGE}|g" "$file"
                                 done
                                 
-                                kubectl apply -f k8s/ --validate=false || echo "Kubernetes deployment failed or not configured"
+                                KUBECONFIG=${KUBECONFIG} kubectl apply -f k8s/ --validate=false || echo "Kubernetes deployment failed or not configured"
                             else
                                 echo "No k8s directory found, skipping Kubernetes deployment"
                             fi
