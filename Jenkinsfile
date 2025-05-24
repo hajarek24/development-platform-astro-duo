@@ -12,6 +12,7 @@ pipeline {
             steps {
                 sh 'docker --version'
                 sh 'which docker'
+                sh 'docker info'
             }
         }
         
@@ -24,7 +25,7 @@ pipeline {
                             docker run --rm \
                                 -v $(pwd):/workspace \
                                 -w /workspace \
-                                maven:3.9.0-openjdk-17 \
+                                maven:3.8.6-openjdk-17 \
                                 mvn clean package -DskipTests
                         '''
                     }
@@ -46,7 +47,7 @@ pipeline {
                             docker run --rm \
                                 -v $(pwd):/workspace \
                                 -w /workspace \
-                                maven:3.9.0-openjdk-17 \
+                                maven:3.8.6-openjdk-17 \
                                 mvn test
                         '''
                     }
@@ -70,7 +71,7 @@ pipeline {
                                 -v $(pwd):/workspace \
                                 -w /workspace \
                                 node:18-alpine \
-                                sh -c "rm -rf node_modules package-lock.json && npm install && npm run build"
+                                sh -c "npm install && npm run build"
                         '''
                     }
                 }
