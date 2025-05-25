@@ -82,12 +82,12 @@ pipeline {
                         // Verify JAR file exists
                         sh 'ls -la target/*.jar || echo "No JAR file found"'
                         
-                        // Build Docker image
-                        def backendImage = docker.build("${BACKEND_IMAGE}", ".")
+                        // Build Docker image using current directory as context
+                        sh "docker build -t ${BACKEND_IMAGE} ."
                         
                         // Push to Docker Hub
                         docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                            backendImage.push()
+                            sh "docker push ${BACKEND_IMAGE}"
                         }
                         
                         echo "Backend image built and pushed: ${BACKEND_IMAGE}"
