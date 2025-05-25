@@ -79,27 +79,19 @@ pipeline {
                 script {
                     // Build backend image
                     dir('backend') {
+                        // Verify JAR file exists
+                        sh 'ls -la target/*.jar || echo "No JAR file found"'
+                        
+                        // Build Docker image
                         def backendImage = docker.build("${BACKEND_IMAGE}", ".")
+                        
+                        // Push to Docker Hub
+                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                            backendImage.push()
+                        }
+                        
+                        echo "Backend image built and pushed: ${BACKEND_IMAGE}"
                     }
-                    
-                    // Build frontend image (assuming a Dockerfile exists in ./frontend)
-                    // def frontendImage = docker.build("${FRONTEND_IMAGE}", "./frontend")
-
-                    // Push images to Docker Hub
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') { // Use your Docker Hub credentials ID
-                        backendImage.push()
-                        // Optional: push also with 'latest' tag
-                        // backendImage.push("${DOCKER_REGISTRY}/backend:latest")
-
-                        // If you have a frontend image:
-                        // frontendImage.push()
-                        // Optional: push also with 'latest' tag
-                        // frontendImage.push("${DOCKER_REGISTRY}/frontend:latest")
-                    }
-                    
-                    echo "Backend image built and pushed: ${BACKEND_IMAGE}"
-                    // If frontend image is built:
-                    // echo "Frontend image built and pushed: ${FRONTEND_IMAGE}"
                 }
             }
         }
