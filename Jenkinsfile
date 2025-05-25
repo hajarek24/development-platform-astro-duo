@@ -78,7 +78,9 @@ pipeline {
             steps {
                 script {
                     // Build backend image
-                    def backendImage = docker.build("${BACKEND_IMAGE}", "./backend")
+                    dir('backend') {
+                        def backendImage = docker.build("${BACKEND_IMAGE}", ".")
+                    }
                     
                     // Build frontend image (assuming a Dockerfile exists in ./frontend)
                     // def frontendImage = docker.build("${FRONTEND_IMAGE}", "./frontend")
