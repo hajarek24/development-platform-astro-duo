@@ -85,6 +85,24 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Monitoring Config') {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                        sh '''
+                            # Apply ServiceMonitor if it exists
+                            if [ -f k8s/servicemonitor.yaml ]; then
+                                KUBECONFIG=${KUBECONFIG} kubectl apply -f k8s/servicemonitor.yaml || echo "ServiceMonitor deployment failed or not configured"
+                            else
+                                echo "No k8s/servicemonitor.yaml found, skipping Monitoring Config deployment"
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
+
     }
     
     post {

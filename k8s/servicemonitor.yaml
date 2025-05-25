@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: space-gateway-monitor
+  namespace: monitoring
+  labels:
+    app: space-gateway
+spec:
+  selector:
+    matchLabels:
+      app: space-gateway-backend
+  endpoints:
+  - port: http
+    path: /actuator/prometheus
+    interval: 30s
+  namespaceSelector:
+    matchNames:
+    - default  # Change to your app's namespace
