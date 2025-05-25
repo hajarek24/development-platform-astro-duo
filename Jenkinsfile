@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_REGISTRY = 'yourrepo' // Replace with your actual Docker registry
+        DOCKER_REGISTRY = 'hajarek24' // Replace with your actual Docker registry
         BACKEND_IMAGE = "${DOCKER_REGISTRY}/backend:${BUILD_NUMBER}"
     }
     
@@ -51,12 +51,11 @@ pipeline {
                     def backendImage = docker.build("${BACKEND_IMAGE}", "./backend")
                     
                     // Push images (uncomment when ready to push)
-                    /*
-                    docker.withRegistry('https://your-registry-url', 'docker-registry-credentials') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
                         backendImage.push()
-                        backendImage.push('latest')
+                        // Optionnel : pousser aussi avec le tag 'latest'
+                        // backendImage.push('latest')
                     }
-                    */
                     
                     echo "Backend image built: ${BACKEND_IMAGE}"
                 }
