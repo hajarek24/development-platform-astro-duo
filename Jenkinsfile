@@ -50,12 +50,11 @@ pipeline {
         }
         
         stage('Build Frontend') {
+            agent {
+                docker { image 'node:18-alpine' }
+            }
             steps {
-                // Utilise l'installation Node.js configurée dans 'Global Tool Configuration'
-                tool 'NodeJS_18' // <-- Utilise le nom que tu as donné à ton installation Node.js 18+
                 dir('frontend') {
-                    // Assumes Node.js is configured via 'Manage Jenkins' -> 'Global Tool Configuration'
-                    // Or available in the agent's PATH
                     sh 'npm install'
                     sh 'npm run build'
                 }
