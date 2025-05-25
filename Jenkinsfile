@@ -15,9 +15,7 @@ pipeline {
                 sh 'docker --version'
                 sh 'which docker'
                 sh 'mvn --version'
-                // Optional: Add node version verification if needed
-                // sh 'node -v'
-                // sh 'npm -v'
+                echo 'Frontend will use Node.js via Docker agent'
             }
         }
         
@@ -51,23 +49,32 @@ pipeline {
         
         stage('Build Frontend') {
             agent {
-                docker { image 'node:18-alpine' }
+                docker { 
+                    image 'node:18-alpine'
+                    // Important: Reuse the same workspace to access files
+                    reuseNode true
+                }
             }
             steps {
                 dir('frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
+                    sh 'node -v && npm -v'
+                    sh 'npm cache clean --force'
+                    sh 'npm install --legacy-peer-deps'
+                    sh 'NODE_OPTIONS="--max-old-space-size=4096" npm run build'
+                    sh 'ls -la dist/ || echo "dist directory not found"'
                 }
             }
             post {
-                 always {
-                     // Archive frontend artifacts if they exist
-                     archiveArtifacts artifacts: 'frontend/dist/**/*', fingerprint: true, allowEmptyArchive: true
-                 }
+                always {
+                    // Archive frontend artifacts if they exist
+                    archiveArtifacts artifacts: 'frontend/dist/**/*', fingerprint: true, allowEmptyArchive: true
+                }
             }
         }
         
         stage('Docker Build & Push') {
+            // Return to the main agent for Docker operations
+            agent any
             steps {
                 script {
                     // Build backend image
@@ -96,6 +103,7 @@ pipeline {
         }
         
         stage('Deploy to Kubernetes') {
+            agent any
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) { // Use your Kubernetes config secret file credential ID
@@ -133,6 +141,7 @@ pipeline {
         }
         
         stage('Cleanup') {
+            agent any
             steps {
                 sh '''
                 # Clean up Docker images to save space (optional, use with caution)
