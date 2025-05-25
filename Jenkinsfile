@@ -2,8 +2,11 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_REGISTRY = 'hajarek24' // Replace with your actual Docker registry
+        DOCKER_REGISTRY = 'hajarek24' // Your Docker Hub username
         BACKEND_IMAGE = "${DOCKER_REGISTRY}/backend:${BUILD_NUMBER}"
+        FRONTEND_IMAGE = "${DOCKER_REGISTRY}/frontend:${BUILD_NUMBER}"
+        // DOCKER_HUB_CREDS_ID = 'dockerhub-credentials' // ID of your Docker Hub credentials in Jenkins
+        // KUBECONFIG_CREDS_ID = 'kubeconfig' // ID of your Kubernetes config secret file credential in Jenkins
     }
     
     stages {
@@ -11,8 +14,10 @@ pipeline {
             steps {
                 sh 'docker --version'
                 sh 'which docker'
-                sh 'docker info'
                 sh 'mvn --version'
+                // Optional: Add node version verification if needed
+                // sh 'node -v'
+                // sh 'npm -v'
             }
         }
         
@@ -44,20 +49,47 @@ pipeline {
             }
         }
         
+        stage('Build Frontend') {
+            steps {
+                dir('frontend') {
+                    // Assumes Node.js is configured via 'Manage Jenkins' -> 'Global Tool Configuration'
+                    // Or available in the agent's PATH
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+            post {
+                 always {
+                     // Archive frontend artifacts if they exist
+                     archiveArtifacts artifacts: 'frontend/dist/**/*', fingerprint: true, allowEmptyArchive: true
+                 }
+            }
+        }
+        
         stage('Docker Build & Push') {
             steps {
                 script {
                     // Build backend image
                     def backendImage = docker.build("${BACKEND_IMAGE}", "./backend")
                     
-                    // Push images (uncomment when ready to push)
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                    // Build frontend image (assuming a Dockerfile exists in ./frontend)
+                    // def frontendImage = docker.build("${FRONTEND_IMAGE}", "./frontend")
+
+                    // Push images to Docker Hub
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') { // Use your Docker Hub credentials ID
                         backendImage.push()
-                        // Optionnel : pousser aussi avec le tag 'latest'
-                        // backendImage.push('latest')
+                        // Optional: push also with 'latest' tag
+                        // backendImage.push("${DOCKER_REGISTRY}/backend:latest")
+
+                        // If you have a frontend image:
+                        // frontendImage.push()
+                        // Optional: push also with 'latest' tag
+                        // frontendImage.push("${DOCKER_REGISTRY}/frontend:latest")
                     }
                     
-                    echo "Backend image built: ${BACKEND_IMAGE}"
+                    echo "Backend image built and pushed: ${BACKEND_IMAGE}"
+                    // If frontend image is built:
+                    // echo "Frontend image built and pushed: ${FRONTEND_IMAGE}"
                 }
             }
         }
@@ -65,18 +97,31 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) { // Use your Kubernetes config secret file credential ID
                         // Check if kubectl is available
                         sh 'kubectl version --client || echo "kubectl not available, skipping deployment"'
                         
+                        // Ensure KUBECONFIG is set for kubectl commands
+                        def kubectl_cmd = "KUBECONFIG=${KUBECONFIG} kubectl"
+
                         // Update image tags in Kubernetes manifests if they exist
                         sh '''
                             if [ -d "k8s" ]; then
                                 find k8s/ -name "*.yaml" -o -name "*.yml" | while read file; do
-                                    sed -i "s|image: .*backend.*|image: ${BACKEND_IMAGE}|g" "$file"
+                                    # Update backend image tag
+                                    sed -i "s|image: hajarek24/backend:.*|image: ${BACKEND_IMAGE}|g" "$file"
+                                    # Update frontend image tag (if frontend deployment manifest exists)
+                                    sed -i "s|image: hajarek24/frontend:.*|image: ${FRONTEND_IMAGE}|g" "$file" || true # Use || true to ignore errors if frontend image not found
                                 done
                                 
-                                KUBECONFIG=${KUBECONFIG} kubectl apply -f k8s/ --validate=false || echo "Kubernetes deployment failed or not configured"
+                                # Apply Kubernetes manifests
+                                ${kubectl_cmd} apply -f k8s/ || echo "Kubernetes deployment failed or not configured"
+
+                                # Apply ServiceMonitor if it exists (part of monitoring config)
+                                if [ -f k8s/servicemonitor.yaml ]; then
+                                    ${kubectl_cmd} apply -f k8s/servicemonitor.yaml || echo "ServiceMonitor deployment failed or not configured"
+                                fi
+
                             else
                                 echo "No k8s directory found, skipping Kubernetes deployment"
                             fi
@@ -85,33 +130,22 @@ pipeline {
                 }
             }
         }
-
-        stage('Deploy Monitoring Config') {
+        
+        stage('Cleanup') {
             steps {
-                script {
-                    withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
-                        sh '''
-                            # Apply ServiceMonitor if it exists
-                            if [ -f k8s/servicemonitor.yaml ]; then
-                                KUBECONFIG=${KUBECONFIG} kubectl apply -f k8s/servicemonitor.yaml || echo "ServiceMonitor deployment failed or not configured"
-                            else
-                                echo "No k8s/servicemonitor.yaml found, skipping Monitoring Config deployment"
-                            fi
-                        '''
-                    }
-                }
+                sh '''
+                # Clean up Docker images to save space (optional, use with caution)
+                # docker image prune -f || true
+                # docker builder prune -f || true
+                '''
+                cleanWs() // Clean the Jenkins workspace
             }
         }
-
     }
     
     post {
         always {
-            // Clean up Docker images to save space
-            sh '''
-                docker image prune -f || true
-                docker builder prune -f || true
-            '''
+            echo "Pipeline finished."
         }
         success {
             echo 'Pipeline completed successfully!'
